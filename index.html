@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ô Bánh Mì — Street Food Vietnamien · Montgeron</title>
+  <link rel="icon" type="image/png" href="logo-carre.png"/>
+  <meta name="description" content="Ô Bánh Mì, restaurant de street food vietnamien à Montgeron. Bánh mì artisanaux, bowls crousty, bao burger, bubble tea et spécialités vietnamiennes. Viandes Halal."/>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css"/>
+
+  <!-- Extra styles pour nouvelles sections -->
+  <style>
+    /* ── m-card avec image ── */
+    .m-card-img {
+      height: 180px;
+      margin: -32px -28px 24px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .m-card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .6s var(--ease);
+    }
+    .m-card:hover .m-card-img img { transform: scale(1.06); }
+
+    /* ── Formules ── */
+    #formules { background: var(--surface2); }
+    .formules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+    }
+    @media(max-width: 768px) { .formules-grid { grid-template-columns: 1fr; } }
+    .formule-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 40px 32px;
+      text-align: center;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s var(--ease), box-shadow .3s;
+    }
+    .formule-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(0,0,0,.45);
+    }
+    .formule-card.featured {
+      border-color: var(--gold);
+      background: var(--surface2);
+    }
+    .formule-card.featured::before {
+      content: 'POPULAIRE';
+      position: absolute;
+      top: 16px; right: -28px;
+      background: var(--gold);
+      color: var(--dark);
+      font-size: .56rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      padding: 5px 36px;
+      transform: rotate(45deg);
+    }
+    .formule-label {
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .formule-items {
+      list-style: none;
+      margin: 20px 0 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .formule-items li {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--text);
+      position: relative;
+    }
+    .formule-sep {
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      font-size: .8rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .formule-price-block {
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+    .formule-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.6rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .formule-etudiant {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .formule-etudiant strong { color: var(--text); }
+    .formule-note {
+      color: var(--muted);
+      font-size: .82rem;
+      margin-top: 12px;
+    }
+
+    /* ── Avis Google ── */
+    #avis { background: var(--surface); overflow: hidden; isolation: isolate; }
+    .rating-hero {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-top: 48px;
+      margin-bottom: 56px;
+    }
+    .rating-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 6rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .rating-meta { display: flex; flex-direction: column; gap: 6px; }
+    .rating-stars { display: flex; gap: 4px; }
+    .rating-stars span { color: var(--gold); font-size: 1.5rem; }
+    .rating-count { font-size: .85rem; color: var(--muted); }
+
+    /* Marquee — animé par GSAP */
+    .marquee-row {
+      overflow: hidden;
+      margin: 0 -5vw;
+      padding: 12px 0;
+      position: relative;
+    }
+    .marquee-row::before,
+    .marquee-row::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 120px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .marquee-row::before {
+      left: 0;
+      background: linear-gradient(to right, var(--surface) 0%, transparent 100%);
+    }
+    .marquee-row::after {
+      right: 0;
+      background: linear-gradient(to left, var(--surface) 0%, transparent 100%);
+    }
+    .marquee-row + .marquee-row { margin-top: 4px; }
+    .marquee-track {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      will-change: transform;
+    }
+    /* animations gérées par GSAP */
+
+    .review-card {
+      background: rgba(255,255,255,.04);
+      border-radius: 8px;
+      padding: 24px 22px;
+      width: 320px;
+      flex-shrink: 0;
+      cursor: default;
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+    .review-stars { display: flex; gap: 3px; margin-bottom: 14px; }
+    .review-stars span { color: var(--gold); font-size: .85rem; }
+    .review-text {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: .9rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .review-author {
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .review-badge {
+      font-size: .58rem;
+      background: rgba(201,147,42,.12);
+      color: var(--gold);
+      padding: 3px 9px;
+      border-radius: 2px;
+      letter-spacing: .08em;
+      display: inline-block;
+      margin-top: 5px;
+    }
+    .reviews-footer {
+      text-align: center;
+      margin-top: 52px;
+    }
+
+    /* ── Instagram ── */
+    #instagram {
+      background: #fff;
+      --text: #1A0F08;
+      --muted: #5a4a3a;
+      --line: rgba(201,147,42,.25);
+      color: #1A0F08;
+    }
+    #instagram .display, #instagram h2 { color: #1A0F08; }
+    #instagram .eyebrow { color: var(--gold); }
+    .ig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+      margin-top: 64px;
+    }
+    @media(max-width: 900px) { .ig-grid { grid-template-columns: 1fr; } }
+    .ig-embed-wrap {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      background: #000;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .ig-embed-wrap iframe { display: block; max-width: 100%; }
+    .ig-text p {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.85;
+      margin: 24px 0 32px;
+      max-width: 440px;
+    }
+
+    /* ── Map iframe fix ── */
+    .map-img iframe {
+      display: block;
+      width: 100%;
+      height: 360px;
+      border: 0;
+    }
+  </style>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+  <!-- Grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div id="cursor" aria-hidden="true">
+    <div class="c-ring" id="cring"></div>
+    <div class="c-dot"  id="cdot"></div>
+  </div>
+
+  <!-- ── Loader ─────────────────────────────────────────── -->
+  <div id="loader">
+    <div class="l-inner">
+      <img src="logo-carre.png" id="l-logo" style="width:240px;height:240px;object-fit:contain;display:block;margin:0 auto;opacity:0;transform:scale(.5);"/>
+      <p id="l-tagline">Asian food &amp; Bubble tea</p>
+    </div>
+  </div>
+
+  <!-- ── Nav ───────────────────────────────────────────── -->
+  <nav id="nav">
+    <a href="#hero" class="nav-logo-img">
+      <img src="logo-horizontal.png" alt="Ô Banh Mi" style="height:52px;width:auto;display:block;"/>
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about">Histoire</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#avis">Avis</a></li>
+      <li><a href="#localisation">Adresse</a></li>
+    </ul>
+    <a href="https://www.ubereats.com/fr/store/o-banh-mi/YKgD78Y4Ts-eA2ILAwVZOg" target="_blank" class="nav-cta">Commander →</a>
+    <div class="hamburger" id="ham"><span></span><span></span><span></span></div>
+  </nav>
+
+  <!-- ── Hero ──────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-img" id="hero-img">
+      <img
+        src="hero.jpeg"
+        alt="Ô Bánh Mì Montgeron — Street food vietnamien"
+        loading="eager"
+      />
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow" id="h-eye">
+        <span>Street Food Vietnamien · Montgeron · Asian Food &amp; Bubble Tea</span>
+      </div>
+      <h1 class="hero-title" id="h-title">
+        <span class="line"><span>L'ÂME DU</span></span>
+        <span class="line"><span class="accent">VIÊT NAM</span></span>
+        <span class="line"><span class="stroke">DANS VOTRE</span></span>
+        <span class="line"><span>BAGUETTE</span></span>
+      </h1>
+      <div class="hero-bottom">
+        <div class="hero-sub" id="h-sub">
+          <p>Des bánh mì artisanaux, des bols généreux<br/>et des saveurs venues directement de Saïgon.</p>
+        </div>
+        <div class="hero-actions" id="h-act">
+          <a href="#menu" class="btn-primary">Voir le menu</a>
+          <a href="#localisation" class="btn-ghost">Nous trouver</a>
+        </div>
+        <div class="hero-scroll-cue" id="h-scroll">
+          <div class="scroll-track"><div class="scroll-fill"></div></div>
+          <span>Scroll</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Ticker ─────────────────────────────────────────── -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <div class="ticker-item">BÁNH MÌ ARTISANAL<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BUBBLE TEA MAISON<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BAO BURGER<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BO BUN<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BOWL CROUSTY<span class="ticker-sep"></span></div>
+      <div class="ticker-item">VIANDES HALAL<span class="ticker-sep"></span></div>
+      <div class="ticker-item">MONTGERON · 91230<span class="ticker-sep"></span></div>
+      <div class="ticker-item">4,9★ GOOGLE<span class="ticker-sep"></span></div>
+      <!-- Duplicate for seamless loop -->
+      <div class="ticker-item">BÁNH MÌ ARTISANAL<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BUBBLE TEA MAISON<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BAO BURGER<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BO BUN<span class="ticker-sep"></span></div>
+      <div class="ticker-item">BOWL CROUSTY<span class="ticker-sep"></span></div>
+      <div class="ticker-item">VIANDES HALAL<span class="ticker-sep"></span></div>
+      <div class="ticker-item">MONTGERON · 91230<span class="ticker-sep"></span></div>
+      <div class="ticker-item">4,9★ GOOGLE<span class="ticker-sep"></span></div>
+    </div>
+  </div>
+
+  <!-- ── About — Bento Grid ────────────────────────────── -->
+  <section id="about" class="s">
+    <div class="eyebrow slide-up">Notre Histoire</div>
+    <h2 class="display slide-up">Une <em>fusion</em><br/>née à Saïgon</h2>
+
+    <div class="bento">
+      <div class="bento-cell b1">
+        <img
+          src="vitrine.webp"
+          alt="Vitrine Ô Bánh Mì Montgeron"
+          loading="lazy"
+        />
+        <div class="bento-tag">Montgeron, 91230</div>
+      </div>
+      <div class="bento-cell b2">
+        <div class="bento-stat-num" data-count="163">0</div>
+        <div class="bento-stat-label">Avis 5 étoiles Google</div>
+        <p style="margin-top:16px">Note moyenne de <strong>4,9/5</strong>. Nos clients adorent nos plats et notre accueil chaleureux.</p>
+      </div>
+      <div class="bento-cell b3">
+        <div class="bento-stat-num" style="color:var(--gold)" data-count="100">0</div>
+        <div class="bento-stat-label">% Ingrédients frais</div>
+        <p style="margin-top:16px">Légumes livrés chaque matin. Herbes coupées à la commande. Viandes <strong>100% Halal</strong>.</p>
+      </div>
+      <div class="bento-cell b4" style="padding:40px 36px;display:flex;align-items:center">
+        <div class="bento-big-text">
+          "Le bánh mì, c'est l'histoire de deux cultures qui se rencontrent dans une baguette et créent quelque chose d'inoubliable."
+        </div>
+      </div>
+      <div class="bento-cell b5">
+        <h3>Notre ADN</h3>
+        <p>Né de la colonisation française au Viêt Nam, le bánh mì incarne une fusion unique — <strong>baguette croustillante</strong>, garnitures asiatiques, explosion de saveurs.</p>
+      </div>
+      <div class="bento-cell b6">
+        <img
+          src="proprietaires.webp"
+          alt="Les propriétaires d'Ô Bánh Mì"
+          loading="lazy"
+        />
+      </div>
+      <div class="bento-cell b7">
+        <h3>100% Halal</h3>
+        <p>Toutes nos viandes sont certifiées <strong>Halal</strong>. Pickles préparés maison, sauces confectionnées sur place. <strong>Aucun compromis.</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Bánh mì éclaté (scroll) ──────────────────────── -->
+  <section id="banh-reveal">
+    <div id="banh-pin">
+
+      <div class="banh-layer" id="l-pain-haut">
+        <img src="ingredients/pain-haut.png" alt="Baguette croustillante"/>
+        <span class="banh-label right">Baguette<br/>croustillante</span>
+      </div>
+
+      <div class="banh-layer" id="l-coriandre">
+        <img src="ingredients/coriandre.png" alt="Coriandre fraîche"/>
+        <span class="banh-label left">Coriandre<br/>fraîche</span>
+      </div>
+
+      <div class="banh-layer" id="l-concombre">
+        <img src="ingredients/concombre.png" alt="Concombre"/>
+        <span class="banh-label right">Concombre</span>
+      </div>
+
+      <div class="banh-layer" id="l-carottes">
+        <img src="ingredients/carottes.png" alt="Carottes marinées"/>
+        <span class="banh-label left">Carottes<br/>marinées</span>
+      </div>
+
+      <div class="banh-layer" id="l-viande">
+        <img src="ingredients/viande.png" alt="Viande Halal"/>
+        <span class="banh-label right">Bœuf citronelle, Poulet<br/>ou Tofu · 100% Halal</span>
+      </div>
+
+      <div class="banh-layer" id="l-pain-bas">
+        <img src="ingredients/pain-bas.png" alt="Baguette artisanale"/>
+        <span class="banh-label left">Baguette<br/>artisanale</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Menu ──────────────────────────────────────────── -->
+  <section id="menu" class="s">
+    <div class="menu-header">
+      <div>
+        <div class="eyebrow slide-up">Notre Carte</div>
+        <h2 class="display slide-up">Choisissez<br/>votre <em>plaisir</em></h2>
+      </div>
+      <div class="tab-row" id="tab-row">
+        <button class="tab-btn active" data-tab="banh-mi">Bánh Mì</button>
+        <button class="tab-btn" data-tab="bowls">Bowls &amp; Bao</button>
+        <button class="tab-btn" data-tab="entrees">Entrées</button>
+        <button class="tab-btn" data-tab="desserts">Desserts</button>
+        <button class="tab-btn" data-tab="boissons">Boissons</button>
+      </div>
+    </div>
+
+    <div class="menu-grid" id="menu-grid">
+
+      <!-- ── Bánh Mì ── -->
+      <div class="menu-panel" id="tab-banh-mi">
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="banh-mi3.png" alt="Bánh Mì" loading="lazy"/>
+          </div>
+          <div class="m-num">01</div>
+          <div class="m-name">Bánh Mì</div>
+          <div class="m-desc">Baguette garnie de concombre, carottes marinées, coriandre et viande au choix — Poulet croustillant, Bœuf ou Tofu.</div>
+          <div class="m-footer"><span class="m-price">9,10 €</span><span class="m-badge sig">Signature</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="banh-mi-bowl.png" alt="Bánh Mì Bowl" loading="lazy"/>
+          </div>
+          <div class="m-num">02</div>
+          <div class="m-name">Bánh Mì Bowl</div>
+          <div class="m-desc">Riz blanc, concombre, carottes marinées, coriandre, mayonnaise et viande au choix.</div>
+          <div class="m-footer"><span class="m-price">13,00 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+      </div>
+
+      <!-- ── Bowls & Bao ── -->
+      <div class="menu-panel hidden" id="tab-bowls">
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="bowl-crousty.png" alt="Bowl Crousty" loading="lazy"/>
+          </div>
+          <div class="m-num">01</div>
+          <div class="m-name">Bowl Crousty</div>
+          <div class="m-desc">Riz blanc sauce sucrée, poulet croustillant frais, oignons frits, mayonnaise, céleri.</div>
+          <div class="m-footer"><span class="m-price">13,00 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="bo-bun2.png" alt="Bo Bun" loading="lazy"/>
+          </div>
+          <div class="m-num">02</div>
+          <div class="m-name">Bo Bun</div>
+          <div class="m-desc">Vermicelles de riz, bœuf mariné à la citronnelle, carottes marinées, concombre frais, pousses de soja, cacahuètes concassées, menthe fraîche — sauce nuoc-mam maison.</div>
+          <div class="m-footer"><span class="m-price">14,30 €</span><span class="m-badge sig">Signature</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="bao-burger2.png" alt="Bao Burger" loading="lazy"/>
+          </div>
+          <div class="m-num">03</div>
+          <div class="m-name">Bao Burger</div>
+          <div class="m-desc">Pain Bao moelleux, poulet croustillant, Cheddar fondu, mâche et sauce Chili-sucrée.</div>
+          <div class="m-footer"><span class="m-price">14,30 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+      </div>
+
+      <!-- ── Entrées ── -->
+      <div class="menu-panel hidden" id="tab-entrees">
+        <div class="m-card">
+          <div class="m-num">01</div>
+          <div class="m-name">Nems Poulet</div>
+          <div class="m-desc">3 pièces. Nems dorés au poulet, croustillants à souhait, servis avec sauce nuoc-mam.</div>
+          <div class="m-footer"><span class="m-price">5,20 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-num">02</div>
+          <div class="m-name">Tempura de Crevettes</div>
+          <div class="m-desc">3 pièces. Crevettes en tempura légère et dorée.</div>
+          <div class="m-footer"><span class="m-price">5,20 €</span><span class="m-badge sig">Signature</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-num">03</div>
+          <div class="m-name">Gyoza Poulet</div>
+          <div class="m-desc">3 pièces. Raviolis japonais au poulet, dorés à la poêle et cuits à la vapeur.</div>
+          <div class="m-footer"><span class="m-price">5,20 €</span><span class="m-badge sig">Signature</span></div>
+        </div>
+      </div>
+
+      <!-- ── Desserts ── -->
+      <div class="menu-panel hidden" id="tab-desserts">
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="tiramisu.png" alt="Tiramisu Nutella Spéculoos" loading="lazy"/>
+          </div>
+          <div class="m-num">01</div>
+          <div class="m-name">Tiramisu Nutella Spéculoos</div>
+          <div class="m-desc">Tiramisu revisité au Nutella, crumble de spéculoos croustillants. Gourmand et irrésistible.</div>
+          <div class="m-footer"><span class="m-price">4,50 €</span><span class="m-badge sig">Signature</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="tapioca-mangue.png" alt="Tapioca Mangue" loading="lazy"/>
+          </div>
+          <div class="m-num">02</div>
+          <div class="m-name">Tapioca Mangue</div>
+          <div class="m-desc">Perles de tapioca, mangue fraîche et lait de coco. Frais, léger et exotique.</div>
+          <div class="m-footer"><span class="m-price">4,50 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-num">03</div>
+          <div class="m-name">Mochi Glacé</div>
+          <div class="m-desc">Glace enrobée de pâte de riz mochi. Saveurs : Matcha, Vanille, Sésame, Pistache, Litchi, Chocolat.</div>
+          <div class="m-footer"><span class="m-price">3,20 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+      </div>
+
+      <!-- ── Boissons ── -->
+      <div class="menu-panel hidden" id="tab-boissons">
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="bubble-tea2.png" alt="Bubble Tea aux Fruits" loading="lazy"/>
+          </div>
+          <div class="m-num">01</div>
+          <div class="m-name">Bubble Tea aux Fruits</div>
+          <div class="m-desc">Boisson au thé fruitée avec perles. Saveurs : Fraise, Mangue, Litchi, Passion, Melon, Hibiscus. 500ml ou 700ml (+1€).</div>
+          <div class="m-footer"><span class="m-price">7,60 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-img">
+            <img src="bubble-tea-lait.png" alt="Bubble Tea au Lait" loading="lazy"/>
+          </div>
+          <div class="m-num">02</div>
+          <div class="m-name">Bubble Tea au Lait</div>
+          <div class="m-desc">Original, Taro, Brown Sugar, Matcha ou Sésame noir. Lait végétal Amande ou Avoine (+0,50€). 500ml ou 700ml (+1€).</div>
+          <div class="m-footer"><span class="m-price">7,60 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-num">03</div>
+          <div class="m-name">Sodas</div>
+          <div class="m-desc">Coca-Cola, Lipton Ice Tea, Oasis, Orangina, Sprite, Perrier, Eau.</div>
+          <div class="m-footer"><span class="m-price">2,90 €</span><span class="m-badge sig">Classique</span></div>
+        </div>
+        <div class="m-card">
+          <div class="m-num">04</div>
+          <div class="m-name">Thé Glacé &amp; Limonade</div>
+          <div class="m-desc">Thé glacé maison ou limonade gazeuse fraîche et désaltérante.</div>
+          <div class="m-footer"><span class="m-price">3,90 €</span><span class="m-badge pop">Populaire</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Formules ──────────────────────────────────────── -->
+  <section id="formules" class="s">
+    <div class="eyebrow slide-up">Nos Formules</div>
+    <h2 class="display slide-up">Composez votre<br/><em>repas idéal</em></h2>
+    <p class="formule-note slide-up">+1€ pour boisson originale · Tarifs étudiants sur présentation de carte</p>
+
+    <div class="formules-grid">
+      <div class="formule-card slide-up">
+        <div class="formule-label">Formule A</div>
+        <ul class="formule-items">
+          <li>Bánh Mì au choix</li>
+          <li><span class="formule-sep">+</span>Boisson Classic</li>
+        </ul>
+        <div class="formule-price-block">
+          <div class="formule-price">9 €</div>
+          <div class="formule-etudiant">Étudiant : <strong>8 €</strong></div>
+        </div>
+      </div>
+      <div class="formule-card featured slide-up">
+        <div class="formule-label">Formule B</div>
+        <ul class="formule-items">
+          <li>Bánh Mì au choix</li>
+          <li><span class="formule-sep">+</span>Bubble Tea</li>
+        </ul>
+        <div class="formule-price-block">
+          <div class="formule-price">12 €</div>
+          <div class="formule-etudiant">Étudiant : <strong>11 €</strong></div>
+        </div>
+      </div>
+      <div class="formule-card slide-up">
+        <div class="formule-label">Formule C</div>
+        <ul class="formule-items">
+          <li>Bánh Mì au choix</li>
+          <li><span class="formule-sep">+</span>Boisson Classic</li>
+          <li><span class="formule-sep">+</span>Dessert au choix</li>
+        </ul>
+        <div class="formule-price-block">
+          <div class="formule-price">12,50 €</div>
+          <div class="formule-etudiant">Étudiant : <strong>11,50 €</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Galerie ────────────────────────────────────────── -->
+  <section id="galerie" class="s" style="padding-bottom:0;background:var(--surface)">
+    <div class="eyebrow slide-up">Notre Univers</div>
+    <h2 class="display slide-up" style="margin-bottom:48px">L'<em>ambiance</em><br/>en images &amp; en vidéo</h2>
+  </section>
+  <div class="pin-wrap-outer" style="background:var(--surface)">
+    <div class="h-track" id="h-track">
+      <div class="h-card">
+        <img src="banh-mi3.png" alt="Bánh Mì"/>
+        <div class="h-card-label"><h4>Bánh Mì</h4><p>Préparé à la commande — 9,10€</p></div>
+      </div>
+      <div class="h-card">
+        <img src="bowl-crousty.png" alt="Bowl Crousty"/>
+        <div class="h-card-label"><h4>Bowl Crousty</h4><p>Poulet croustillant — 13€</p></div>
+      </div>
+      <div class="h-card">
+        <img src="bo-bun2.png" alt="Bo Bun"/>
+        <div class="h-card-label"><h4>Bo Bun</h4><p>Bœuf citronnelle — 14,30€</p></div>
+      </div>
+      <div class="h-card">
+        <img src="bao-burger2.png" alt="Bao Burger"/>
+        <div class="h-card-label"><h4>Bao Burger</h4><p>Pain bao &amp; poulet — 14,30€</p></div>
+      </div>
+      <div class="h-card">
+        <img src="bubble-tea2.png" alt="Bubble Tea"/>
+        <div class="h-card-label"><h4>Bubble Tea</h4><p>Fruits ou lait — 7,60€</p></div>
+      </div>
+      <div class="h-card">
+        <img src="tapioca-mangue.png" alt="Tapioca Mangue"/>
+        <div class="h-card-label"><h4>Tapioca Mangue</h4><p>Frais et exotique — 4,50€</p></div>
+      </div>
+      <div class="h-card">
+        <img src="tiramisu.png" alt="Tiramisu Nutella"/>
+        <div class="h-card-label"><h4>Tiramisu Nutella</h4><p>Spéculoos croustillant — 4,50€</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Vidéos Reels ──────────────────────────────────── -->
+  <div style="background:var(--surface);padding:64px 5vw;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;">
+    <!-- Instagram Reel -->
+    <div style="flex:1;min-width:280px;max-width:400px;border-radius:4px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.5);">
+      <iframe
+        src="https://www.instagram.com/p/DXeCkNfiHSg/embed/"
+        style="display:block;width:100%;height:700px;border:none"
+        frameborder="0"
+        scrolling="no"
+        allowtransparency="true"
+        loading="lazy"
+      ></iframe>
+    </div>
+    <!-- Facebook Reel -->
+    <div style="flex:1;min-width:280px;max-width:400px;border-radius:4px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.5);">
+      <iframe
+        src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F2535224160266428&show_text=false&width=400&height=700"
+        style="display:block;width:100%;height:700px;border:none;overflow:hidden"
+        scrolling="no"
+        frameborder="0"
+        allowfullscreen="true"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </div>
+
+  <!-- ── Instagram ─────────────────────────────────────── -->
+  <section id="instagram" class="s">
+    <div class="ig-grid">
+      <div class="ig-embed-wrap" style="cursor:pointer;position:relative;overflow:hidden;border-radius:4px;max-width:420px;margin:0 auto;" onclick="window.open('https://www.instagram.com/reel/DXeCkNfiHSg/','_blank')">
+        <img
+          src="photo-reel-instagram.jpeg"
+          alt="Ô Bánh Mì — Voir sur Instagram"
+          style="width:100%;height:600px;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.76,0,.24,1)"
+          onmouseover="this.style.transform='scale(1.04)'"
+          onmouseout="this.style.transform='scale(1)'"
+        />
+        <!-- Overlay Instagram -->
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,6,4,.85) 0%,rgba(10,6,4,.1) 50%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:28px 24px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <img src="logo-carre.png" alt="Logo" style="width:42px;height:42px;border-radius:50%;object-fit:contain;border:2px solid rgba(255,255,255,.4)"/>
+            <div>
+              <div style="font-weight:600;font-size:.85rem;color:#fff">obanhmi91</div>
+              <div style="font-size:.72rem;color:rgba(255,255,255,.55)">Asian Food &amp; Bubble Tea</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="background:var(--red);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:6px 16px;border-radius:2px">▶ Voir le Reel</span>
+          </div>
+        </div>
+      </div>
+      <div class="ig-text">
+        <div class="eyebrow slide-up">Suivez-nous</div>
+        <h2 class="display slide-up">On est aussi<br/>sur <em>Instagram</em></h2>
+        <p class="slide-up">Retrouvez nos créations du jour, nos coulisses et toute la fraîcheur de notre street food vietnamien. Chaque plat est une explosion de saveurs et de couleurs.</p>
+        <a href="https://www.instagram.com/obanhmi91/" target="_blank" class="btn-primary slide-up">Suivre @obanhmi91 →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Avis Google ───────────────────────────────────── -->
+  <section id="avis" class="s">
+    <div class="eyebrow slide-up">Ce qu'ils disent</div>
+    <h2 class="display slide-up">Ils nous font<br/>confiance sur <em>Google</em></h2>
+
+    <div class="rating-hero slide-up">
+      <div class="rating-num">4,9</div>
+      <div class="rating-meta">
+        <div class="rating-stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <div class="rating-count">163 avis Google · Restaurant vietnamien</div>
+      </div>
+    </div>
+
+    <!-- Marquee row 1 → gauche -->
+    <div class="marquee-row">
+      <div class="marquee-track track-left">
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Excellente découverte ! Les banh mi sont délicieux, généreux et pleins de saveurs. Produits frais, fait maison. Le personnel est adorable et toujours souriant.</div><div class="review-author">Thomas L.</div><div class="review-badge">Visité en janvier 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Chaque plat du menu est incroyablement savoureux, frais et de grande qualité. Les propriétaires sont très sympathiques et l'ambiance est excellente.</div><div class="review-author">Kate M.</div><div class="review-badge">Local Guide · 21 avis</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Le meilleur banh mi que j'ai mangé en Île-de-France. Baguette croustillante, farce généreuse, sauces parfaitement équilibrées. On revient chaque semaine !</div><div class="review-author">Romain D.</div><div class="review-badge">Local Guide · 47 avis</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Adresse incontournable à Montgeron ! Les bowls sont copieux et vraiment savoureux. Le bubble tea mangue est une tuerie. Service rapide et souriant.</div><div class="review-author">Inès B.</div><div class="review-badge">Visité en mars 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Concept original, qualité au rendez-vous. Le bao burger est incroyable, moelleux et bien garni. Viandes halal, parfait pour toute la famille.</div><div class="review-author">Karim A.</div><div class="review-badge">Local Guide · 12 avis</div></div>
+        <!-- duplicate pour boucle infinie -->
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Excellente découverte ! Les banh mi sont délicieux, généreux et pleins de saveurs. Produits frais, fait maison. Le personnel est adorable et toujours souriant.</div><div class="review-author">Thomas L.</div><div class="review-badge">Visité en janvier 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Chaque plat du menu est incroyablement savoureux, frais et de grande qualité. Les propriétaires sont très sympathiques et l'ambiance est excellente.</div><div class="review-author">Kate M.</div><div class="review-badge">Local Guide · 21 avis</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Le meilleur banh mi que j'ai mangé en Île-de-France. Baguette croustillante, farce généreuse, sauces parfaitement équilibrées. On revient chaque semaine !</div><div class="review-author">Romain D.</div><div class="review-badge">Local Guide · 47 avis</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Adresse incontournable à Montgeron ! Les bowls sont copieux et vraiment savoureux. Le bubble tea mangue est une tuerie. Service rapide et souriant.</div><div class="review-author">Inès B.</div><div class="review-badge">Visité en mars 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Concept original, qualité au rendez-vous. Le bao burger est incroyable, moelleux et bien garni. Viandes halal, parfait pour toute la famille.</div><div class="review-author">Karim A.</div><div class="review-badge">Local Guide · 12 avis</div></div>
+      </div>
+    </div>
+
+    <!-- Marquee row 2 → droite -->
+    <div class="marquee-row">
+      <div class="marquee-track track-right">
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Un super bon accueil. Le propriétaire a pris le temps de nous présenter ses produits avec une grande amabilité. Les bubble teas étaient très bons.</div><div class="review-author">Sabrina P.</div><div class="review-badge">Visité en février 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Mes collègues et moi commandons régulièrement le midi. Toujours frais, toujours bon. Le rapport qualité-prix est excellent pour du fait maison.</div><div class="review-author">Nathalie C.</div><div class="review-badge">Visité en avril 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Le tiramisu nutella-spéculoos est une belle surprise ! Et le bo bun est digne des meilleurs restaurants asiatiques de Paris. À deux pas de chez moi, je suis chanceux.</div><div class="review-author">Julien M.</div><div class="review-badge">Visité en avril 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Vraiment impressionné par la qualité des ingrédients. On sent que tout est fait avec passion. Le bowl crousty est mon préféré, je le recommande absolument !</div><div class="review-author">Amélie R.</div><div class="review-badge">Local Guide · 8 avis</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Super endroit ! Les prix sont très raisonnables pour la qualité proposée. J'ai essayé le banh mi poulet et le bubble tea taro, les deux étaient parfaits.</div><div class="review-author">Mehdi S.</div><div class="review-badge">Visité en mai 2025</div></div>
+        <!-- duplicate -->
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Un super bon accueil. Le propriétaire a pris le temps de nous présenter ses produits avec une grande amabilité. Les bubble teas étaient très bons.</div><div class="review-author">Sabrina P.</div><div class="review-badge">Visité en février 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Mes collègues et moi commandons régulièrement le midi. Toujours frais, toujours bon. Le rapport qualité-prix est excellent pour du fait maison.</div><div class="review-author">Nathalie C.</div><div class="review-badge">Visité en avril 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Le tiramisu nutella-spéculoos est une belle surprise ! Et le bo bun est digne des meilleurs restaurants asiatiques de Paris. À deux pas de chez moi, je suis chanceux.</div><div class="review-author">Julien M.</div><div class="review-badge">Visité en avril 2025</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Vraiment impressionné par la qualité des ingrédients. On sent que tout est fait avec passion. Le bowl crousty est mon préféré, je le recommande absolument !</div><div class="review-author">Amélie R.</div><div class="review-badge">Local Guide · 8 avis</div></div>
+        <div class="review-card"><div class="review-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><div class="review-text">Super endroit ! Les prix sont très raisonnables pour la qualité proposée. J'ai essayé le banh mi poulet et le bubble tea taro, les deux étaient parfaits.</div><div class="review-author">Mehdi S.</div><div class="review-badge">Visité en mai 2025</div></div>
+      </div>
+    </div>
+
+    <div class="reviews-footer slide-up">
+      <a href="https://www.google.com/maps/place/O+BANH+MI/@48.7081379,2.4530504,17z" target="_blank" class="btn-ghost">
+        Voir les 163 avis sur Google →
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Localisation ───────────────────────────────────── -->
+  <section id="localisation" class="s">
+    <div class="eyebrow slide-up">Où nous trouver</div>
+    <h2 class="display slide-up">Venez nous<br/><em>rendre visite</em></h2>
+
+    <div class="loc-grid">
+      <div>
+        <div class="info-block slide-up">
+          <h3>Adresse</h3>
+          <p>22 Avenue de la République<br/>91230 Montgeron, Essonne<br/>☎️ <a href="tel:0782024801" style="color:inherit">07 82 02 48 01</a></p>
+        </div>
+        <div class="info-block slide-up">
+          <h3>Horaires</h3>
+          <table class="hours-table">
+            <tr><td class="day">Lundi – Jeudi</td><td class="time open">11h00 – 18h00</td></tr>
+            <tr><td class="day">Vendredi – Samedi</td><td class="time open">11h00 – 20h00</td></tr>
+            <tr><td class="day">Dimanche</td><td class="time closed">Fermé</td></tr>
+          </table>
+        </div>
+        <div class="info-block slide-up">
+          <h3>Réseaux &amp; Livraison</h3>
+          <div class="social-row">
+            <a href="https://www.instagram.com/obanhmi91/" target="_blank" class="soc-btn" title="Instagram">IG</a>
+            <a href="https://www.facebook.com/people/O-Banh-Mi-Montgeron/61585754566153/" target="_blank" class="soc-btn" title="Facebook">FB</a>
+            <a href="https://www.ubereats.com/fr/store/o-banh-mi/YKgD78Y4Ts-eA2ILAwVZOg" target="_blank" class="soc-btn" title="Uber Eats">UE</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-up">
+        <div class="map-block">
+          <div class="map-img">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2633.0!2d2.45085!3d48.70814!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e60bc2cdfa2a7f%3A0x1c5f58aec705dce5!2sO%20BANH%20MI!5e0!3m2!1sfr!2sfr!4v1"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              style="filter:grayscale(60%) contrast(1.1)"
+            ></iframe>
+          </div>
+          <div class="map-overlay">
+            <div class="map-addr">
+              <strong>Ô Bánh Mì Montgeron</strong>
+              22 av. de la République, 91230
+            </div>
+            <a href="https://maps.google.com/?q=22+Avenue+de+la+République+91230+Montgeron" target="_blank" class="map-cta">
+              Itinéraire →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Fullscreen ─────────────────────────────────── -->
+  <div class="cta-full">
+    <div class="cta-full-img">
+      <img
+        src="bao-burger2.png"
+        alt="Bao Burger Ô Bánh Mì"
+        loading="lazy"
+      />
+    </div>
+    <div class="cta-full-overlay"></div>
+    <div class="cta-full-content">
+      <h2 class="slide-up">Prêt pour<br/><em>l'aventure</em><br/>culinaire ?</h2>
+      <a href="https://www.ubereats.com/fr/store/o-banh-mi/YKgD78Y4Ts-eA2ILAwVZOg" target="_blank" class="btn-primary slide-up">
+        Commander sur Uber Eats →
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer>
+    <div class="footer-top">
+      <div class="f-brand">
+        <img src="logo-horizontal.png" alt="Ô Banh Mi" style="height:56px;width:auto;display:block;margin-bottom:16px;"/>
+        <p>Street food vietnamien authentique au cœur de Montgeron. Saveurs de Saïgon, fraîcheur garantie chaque jour. Viandes 100% Halal.</p>
+        <div class="social-row" style="margin-top:24px">
+          <a href="https://www.instagram.com/obanhmi91/" target="_blank" class="soc-btn">IG</a>
+          <a href="https://www.facebook.com/people/O-Banh-Mi-Montgeron/61585754566153/" target="_blank" class="soc-btn">FB</a>
+          <a href="https://www.ubereats.com/fr/store/o-banh-mi/YKgD78Y4Ts-eA2ILAwVZOg" target="_blank" class="soc-btn">UE</a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li><a href="#about">Notre Histoire</a></li>
+          <li><a href="#menu">Le Menu</a></li>
+          <li><a href="#formules">Formules</a></li>
+          <li><a href="#avis">Avis Clients</a></li>
+          <li><a href="#localisation">Nous trouver</a></li>
+        </ul>
+      </div>
+      <div class="f-col">
+        <h4>Pratique</h4>
+        <ul>
+          <li><a href="https://www.ubereats.com/fr/store/o-banh-mi/YKgD78Y4Ts-eA2ILAwVZOg" target="_blank">Livraison Uber Eats</a></li>
+          <li><a href="tel:0782024801">07 82 02 48 01</a></li>
+          <li><a href="#">Allergènes</a></li>
+          <li><a href="#">Mentions légales</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Ô Bánh Mì Montgeron. Tous droits réservés.</p>
+      <p>Fait avec <span class="red">♥</span> et de la citronnelle</p>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button id="back-top" aria-label="Retour en haut">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 14V4M9 4L4 9M9 4L14 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+</body>
+</html>
