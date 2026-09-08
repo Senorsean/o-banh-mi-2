@@ -179,36 +179,98 @@ document.querySelectorAll('.h-card img').forEach(img => {
   });
 });
 
-// ── Bánh mì éclaté (scroll multi-layer) ──────────────
-(function initBanhExplode() {
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#banh-reveal',
-      start:   'top top',
-      end:     'bottom bottom',
-      scrub:   2,
+// ── Bánh mì éclaté (scroll, frames pré-rendues sur canvas) ──
+(function initBanhFrames() {
+  const FRAME_COUNT = 72;
+  const CANVAS_W = 820, CANVAS_H = 1087; // dimensions logiques des frames générées
+  const FRAME_PATH = i => `banh-frames/frame_${String(i).padStart(4, '0')}.jpg`;
+
+  const stage  = document.getElementById('banh-stage');
+  const canvas = document.getElementById('banh-canvas');
+  const track  = document.getElementById('banh-reveal');
+  if (!stage || !canvas || !track) return;
+  const ctx = canvas.getContext('2d');
+
+  const images = new Array(FRAME_COUNT);
+  let loadedCount = 0, ready = false, currentFrame = -1;
+
+  // ingrédient -> décalage vertical (mêmes valeurs que les frames générées)
+  const LAYERS = {
+    'banh-lab-pain-haut': { from: -55, to: -380 },
+    'banh-lab-coriandre': { from:  30, to: -220 },
+    'banh-lab-concombre': { from:  40, to: -110 },
+    'banh-lab-carottes':  { from:  45, to:  -20 },
+    'banh-lab-viande':    { from:  50, to:   90 },
+    'banh-lab-pain-bas':  { from:  60, to:  260 },
+  };
+  const THRESHOLD = {
+    'banh-lab-pain-haut': .15, 'banh-lab-pain-bas': .15,
+    'banh-lab-viande': .35, 'banh-lab-carottes': .5,
+    'banh-lab-concombre': .65, 'banh-lab-coriandre': .8,
+  };
+  const easeInOutQuad = t => t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
+
+  function preloadImages() {
+    for (let i = 0; i < FRAME_COUNT; i++) {
+      const img = new Image();
+      img.src = FRAME_PATH(i + 1);
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        if (loadedCount === FRAME_COUNT) { ready = true; drawFrame(0); }
+      };
+      images[i] = img;
     }
-  });
+  }
 
-  // Valeurs adaptées selon taille écran
-  const mob = window.innerWidth <= 768;
-  const v = mob
-    ? { ph:-225, co:-170, cc:-95, ca:-32, vi:65,  pb:195, phFrom:-35 }
-    : { ph:-380, co:-220, cc:-110,ca:-20, vi:90,  pb:260, phFrom:-55 };
+  function drawFrame(index) {
+    const img = images[index];
+    if (!img || !img.complete || img.naturalWidth === 0) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  }
 
-  tl.fromTo('#l-pain-haut', { y: v.phFrom }, { y: v.ph, ease:'power1.inOut' }, 0)
-    .fromTo('#l-coriandre', { y:  30 }, { y: v.co, ease:'power1.inOut' }, 0)
-    .fromTo('#l-concombre', { y:  40 }, { y: v.cc, ease:'power1.inOut' }, 0)
-    .fromTo('#l-carottes',  { y:  45 }, { y: v.ca, ease:'power1.inOut' }, 0)
-    .fromTo('#l-viande',    { y:  50 }, { y: v.vi, ease:'power1.inOut' }, 0)
-    .fromTo('#l-pain-bas',  { y:  60 }, { y: v.pb, ease:'power1.inOut' }, 0)
-    // Labels apparaissent au fur et à mesure
-    .to('#l-pain-haut .banh-label', { opacity:1, duration:.4 }, 0.15)
-    .to('#l-pain-bas .banh-label',  { opacity:1, duration:.4 }, 0.15)
-    .to('#l-viande .banh-label',    { opacity:1, duration:.4 }, 0.35)
-    .to('#l-carottes .banh-label',  { opacity:1, duration:.4 }, 0.5)
-    .to('#l-concombre .banh-label', { opacity:1, duration:.4 }, 0.65)
-    .to('#l-coriandre .banh-label', { opacity:1, duration:.4 }, 0.8);
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const w = stage.clientWidth, h = stage.clientHeight;
+    canvas.width  = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    if (ready) drawFrame(currentFrame < 0 ? 0 : currentFrame);
+  }
+
+  function updateFromScroll() {
+    const rect = track.getBoundingClientRect();
+    const scrollableDistance = track.offsetHeight - window.innerHeight;
+    let progress = -rect.top / scrollableDistance;
+    progress = Math.min(Math.max(progress, 0), 1);
+
+    const frameIndex = Math.min(FRAME_COUNT - 1, Math.floor(progress * FRAME_COUNT));
+    if (frameIndex !== currentFrame) { currentFrame = frameIndex; drawFrame(frameIndex); }
+
+    const e = easeInOutQuad(progress);
+    const scale = stage.clientWidth / CANVAS_W; // aligne les labels sur le canvas responsive
+    Object.keys(LAYERS).forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const { from, to } = LAYERS[id];
+      const y = (from + (to - from) * e) * scale;
+      el.style.transform = `translateY(calc(-50% + ${y}px))`;
+      el.style.opacity = progress >= THRESHOLD[id] ? 1 : 0;
+    });
+  }
+
+  let pending = false;
+  function onScroll() {
+    if (!pending) {
+      pending = true;
+      requestAnimationFrame(() => { updateFromScroll(); pending = false; });
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', resizeCanvas);
+
+  resizeCanvas();
+  preloadImages();
 })();
 
 // ── Back to top ──────────────────────────────────────────

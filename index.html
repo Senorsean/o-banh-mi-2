@@ -415,40 +415,18 @@
     </div>
   </section>
 
-  <!-- ── Bánh mì éclaté (scroll) ──────────────────────── -->
+  <!-- ── Bánh mì éclaté (scroll, frames pré-rendues) ──── -->
   <section id="banh-reveal">
     <div id="banh-pin">
-
-      <div class="banh-layer" id="l-pain-haut">
-        <img src="ingredients/pain-haut.png" alt="Baguette croustillante"/>
-        <span class="banh-label right">Baguette<br/>croustillante</span>
+      <div id="banh-stage">
+        <canvas id="banh-canvas" width="820" height="1087" aria-label="Bánh mì qui se décompose en ingrédients"></canvas>
+        <span class="banh-label right" id="banh-lab-pain-haut">Baguette<br/>croustillante</span>
+        <span class="banh-label left"  id="banh-lab-coriandre">Coriandre<br/>fraîche</span>
+        <span class="banh-label right" id="banh-lab-concombre">Concombre</span>
+        <span class="banh-label left"  id="banh-lab-carottes">Carottes<br/>marinées</span>
+        <span class="banh-label right" id="banh-lab-viande">Bœuf citronelle, Poulet<br/>ou Tofu · 100% Halal</span>
+        <span class="banh-label left"  id="banh-lab-pain-bas">Baguette<br/>artisanale</span>
       </div>
-
-      <div class="banh-layer" id="l-coriandre">
-        <img src="ingredients/coriandre.png" alt="Coriandre fraîche"/>
-        <span class="banh-label left">Coriandre<br/>fraîche</span>
-      </div>
-
-      <div class="banh-layer" id="l-concombre">
-        <img src="ingredients/concombre.png" alt="Concombre"/>
-        <span class="banh-label right">Concombre</span>
-      </div>
-
-      <div class="banh-layer" id="l-carottes">
-        <img src="ingredients/carottes.png" alt="Carottes marinées"/>
-        <span class="banh-label left">Carottes<br/>marinées</span>
-      </div>
-
-      <div class="banh-layer" id="l-viande">
-        <img src="ingredients/viande.png" alt="Viande Halal"/>
-        <span class="banh-label right">Bœuf citronelle, Poulet<br/>ou Tofu · 100% Halal</span>
-      </div>
-
-      <div class="banh-layer" id="l-pain-bas">
-        <img src="ingredients/pain-bas.png" alt="Baguette artisanale"/>
-        <span class="banh-label left">Baguette<br/>artisanale</span>
-      </div>
-
     </div>
   </section>
 

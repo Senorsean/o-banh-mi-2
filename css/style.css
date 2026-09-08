@@ -639,35 +639,28 @@ footer{
   display:flex;align-items:center;justify-content:center;
   background:#fff;overflow:hidden;
 }
-.banh-layer{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
+#banh-stage{
+  position:relative;
   width:65%;max-width:820px;
-  display:flex;align-items:center;
-  pointer-events:none;
+  aspect-ratio:820/1087;
 }
-/* z-index: pain-haut on top, pain-bas at bottom */
-#l-pain-haut{z-index:6}
-#l-coriandre{z-index:5}
-#l-concombre{z-index:4}
-#l-carottes{z-index:3}
-#l-viande{z-index:2}
-#l-pain-bas{z-index:1}
-.banh-layer img{
-  width:100%;height:auto;
-  object-fit:contain;display:block;
-  filter:drop-shadow(0 12px 40px rgba(0,0,0,.7));
+#banh-canvas{
+  display:block;
+  width:100%;height:100%;
 }
 .banh-label{
   position:absolute;
+  top:50%;
   opacity:0;
+  transform:translateY(-50%);
   font-family:'Inter',sans-serif;
   font-size:.72rem;letter-spacing:.14em;
   text-transform:uppercase;
   color:#3A362F;
   line-height:1.6;
   white-space:nowrap;
+  transition:opacity .4s ease;
+  pointer-events:none;
 }
 .banh-label.left{
   right:calc(100% + 20px);
@@ -691,38 +684,15 @@ footer{
 
 @media(max-width:768px){
   #banh-pin{height:100svh}
-  .banh-layer img{filter:none}
-  .banh-layer{width:90%}
-  /* Labels centrés sur leur ingrédient */
+  #banh-stage{width:90%}
   .banh-label{
-    display:block;
-    position:absolute !important;
-    top:50%;
-    left:50% !important;
-    right:auto !important;
-    bottom:auto !important;
-    transform:translate(-50%,-50%) !important;
-    text-align:center !important;
-    font-size:.58rem;
+    font-size:.6rem;
     letter-spacing:.09em;
-    white-space:nowrap;
-    background:rgba(255,255,255,.9);
+    background:rgba(255,255,255,.88);
     padding:3px 10px;
     border-radius:3px;
-    margin:0 !important;
   }
-  .banh-label::before{display:none !important}
-  /* Pain haut : masqué */
-  #l-pain-haut .banh-label{display:none !important}
-  /* Coriandre : réduite pour pas déborder sur concombre */
-  #l-coriandre img{ width:55%; margin:0 auto; }
-  /* Coriandre label : centré sur l'image réduite */
-  #l-coriandre .banh-label{ top:50%; transform:translate(-50%,-50%) !important; }
-  /* Concombre : label juste sous coriandre, au-dessus de l'image concombre */
-  #l-concombre .banh-label{
-    top:-14px;
-    transform:translateX(-50%) !important;
-  }
+  #banh-lab-pain-haut{display:none}
 }
 
 /* ─── Back to top ───────────────────────────────────── */
