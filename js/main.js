@@ -181,7 +181,7 @@ document.querySelectorAll('.h-card img').forEach(img => {
 
 // ── Bánh mì éclaté (scroll, frames pré-rendues sur canvas) ──
 (function initBanhFrames() {
-  const FRAME_COUNT = 72;
+  const FRAME_COUNT = 60;
   const CANVAS_W = 820, CANVAS_H = 1087; // dimensions logiques des frames générées
   const FRAME_PATH = i => `banh-frames/frame_${String(i).padStart(4, '0')}.jpg`;
 
@@ -208,7 +208,7 @@ document.querySelectorAll('.h-card img').forEach(img => {
     'banh-lab-viande': .35, 'banh-lab-carottes': .5,
     'banh-lab-concombre': .65, 'banh-lab-coriandre': .8,
   };
-  const easeInOutQuad = t => t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
+  const ease = t => t; // lineaire: le mouvement suit le scroll 1:1, pas de zone morte
 
   function preloadImages() {
     for (let i = 0; i < FRAME_COUNT; i++) {
@@ -246,7 +246,7 @@ document.querySelectorAll('.h-card img').forEach(img => {
     const frameIndex = Math.min(FRAME_COUNT - 1, Math.floor(progress * FRAME_COUNT));
     if (frameIndex !== currentFrame) { currentFrame = frameIndex; drawFrame(frameIndex); }
 
-    const e = easeInOutQuad(progress);
+    const e = ease(progress);
     const scale = stage.clientWidth / CANVAS_W; // aligne les labels sur le canvas responsive
     Object.keys(LAYERS).forEach(id => {
       const el = document.getElementById(id);

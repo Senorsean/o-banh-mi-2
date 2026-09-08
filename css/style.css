@@ -632,7 +632,7 @@ footer{
 }
 
 /* ─── Bánh mì éclaté ────────────────────────────────── */
-#banh-reveal{height:500vh;position:relative;background:#fff}
+#banh-reveal{height:260vh;position:relative;background:#fff}
 #banh-pin{
   position:sticky;top:0;
   height:100vh;height:100svh;
