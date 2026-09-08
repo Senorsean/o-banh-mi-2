@@ -126,6 +126,8 @@ nav.solid{
   display:flex;flex-direction:column;align-items:flex-end;gap:6px;
 }
 .nav-logo-img{display:block;line-height:0}
+nav.solid .logo-light{display:none !important}
+nav.solid .logo-dark{display:block !important}
 .hamburger{display:none;flex-direction:column;gap:6px;cursor:none}
 .hamburger span{width:26px;height:1.5px;background:rgba(248,243,231,.9);transition:all .3s}
 nav.solid .hamburger span{background:var(--text)}
