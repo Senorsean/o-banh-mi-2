@@ -114,6 +114,8 @@ nav.solid{
 }
 .nav-links a:hover{color:var(--gold)}
 .nav-links a:hover::after{right:0}
+nav.solid .nav-links a{color:var(--muted)}
+nav.solid .nav-links a:hover{color:var(--text)}
 .nav-cta{
   font-family:'Inter',sans-serif;
   font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
@@ -167,6 +169,7 @@ nav.solid .hamburger span{background:var(--text)}
   font-size:clamp(4rem,12vw,11rem);
   line-height:.92;letter-spacing:.02em;
   overflow:hidden;
+  color:#F8F3E7;
 }
 .hero-title .line{overflow:hidden;display:block}
 .hero-title .line span{display:block;transform:translateY(110%)}
