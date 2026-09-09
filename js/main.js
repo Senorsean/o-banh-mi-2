@@ -179,63 +179,23 @@ document.querySelectorAll('.h-card img').forEach(img => {
   });
 });
 
-// ── Bánh mì éclaté (scroll, frames pré-rendues sur canvas) ──
-(function initBanhFrames() {
-  const FRAME_COUNT = 60;
-  const CANVAS_W = 820, CANVAS_H = 1087; // dimensions logiques des frames générées
-  const FRAME_PATH = i => `banh-frames/frame_${String(i).padStart(4, '0')}.jpg`;
+// ── Bánh mì éclaté (scroll-scrub sur vidéo) ──────────────────
+(function initBanhVideo() {
+  const video   = document.getElementById('banh-video');
+  const caption = document.getElementById('banh-caption');
+  const track   = document.getElementById('banh-reveal');
+  if (!video || !track) return;
 
-  const stage  = document.getElementById('banh-stage');
-  const canvas = document.getElementById('banh-canvas');
-  const track  = document.getElementById('banh-reveal');
-  if (!stage || !canvas || !track) return;
-  const ctx = canvas.getContext('2d');
+  let duration = 0, ready = false, lastTime = -1;
+  const CAPTION_RANGE = [.32, .68]; // fenêtre ou tous les ingredients sont visibles dans la video
 
-  const images = new Array(FRAME_COUNT);
-  let loadedCount = 0, ready = false, currentFrame = -1;
-
-  // ingrédient -> décalage vertical (mêmes valeurs que les frames générées)
-  const LAYERS = {
-    'banh-lab-pain-haut': { from: -55, to: -380 },
-    'banh-lab-coriandre': { from:  30, to: -220 },
-    'banh-lab-concombre': { from:  40, to: -110 },
-    'banh-lab-carottes':  { from:  45, to:  -20 },
-    'banh-lab-viande':    { from:  50, to:   90 },
-    'banh-lab-pain-bas':  { from:  60, to:  260 },
-  };
-  const THRESHOLD = {
-    'banh-lab-pain-haut': .15, 'banh-lab-pain-bas': .15,
-    'banh-lab-viande': .35, 'banh-lab-carottes': .5,
-    'banh-lab-concombre': .65, 'banh-lab-coriandre': .8,
-  };
-  const ease = t => t; // lineaire: le mouvement suit le scroll 1:1, pas de zone morte
-
-  function preloadImages() {
-    for (let i = 0; i < FRAME_COUNT; i++) {
-      const img = new Image();
-      img.src = FRAME_PATH(i + 1);
-      img.onload = img.onerror = () => {
-        loadedCount++;
-        if (loadedCount === FRAME_COUNT) { ready = true; drawFrame(0); }
-      };
-      images[i] = img;
-    }
-  }
-
-  function drawFrame(index) {
-    const img = images[index];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  }
-
-  function resizeCanvas() {
-    const dpr = window.devicePixelRatio || 1;
-    const w = stage.clientWidth, h = stage.clientHeight;
-    canvas.width  = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    if (ready) drawFrame(currentFrame < 0 ? 0 : currentFrame);
-  }
+  video.addEventListener('loadedmetadata', () => {
+    duration = video.duration || 0;
+    ready = duration > 0;
+    updateFromScroll();
+  });
+  video.load();
+  video.pause();
 
   function updateFromScroll() {
     const rect = track.getBoundingClientRect();
@@ -243,19 +203,18 @@ document.querySelectorAll('.h-card img').forEach(img => {
     let progress = -rect.top / scrollableDistance;
     progress = Math.min(Math.max(progress, 0), 1);
 
-    const frameIndex = Math.min(FRAME_COUNT - 1, Math.floor(progress * FRAME_COUNT));
-    if (frameIndex !== currentFrame) { currentFrame = frameIndex; drawFrame(frameIndex); }
+    if (ready) {
+      const t = progress * duration;
+      if (Math.abs(t - lastTime) > .03) {
+        lastTime = t;
+        video.currentTime = t;
+      }
+    }
 
-    const e = ease(progress);
-    const scale = stage.clientWidth / CANVAS_W; // aligne les labels sur le canvas responsive
-    Object.keys(LAYERS).forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const { from, to } = LAYERS[id];
-      const y = (from + (to - from) * e) * scale;
-      el.style.transform = `translateY(calc(-50% + ${y}px))`;
-      el.style.opacity = progress >= THRESHOLD[id] ? 1 : 0;
-    });
+    if (caption) {
+      const visible = progress >= CAPTION_RANGE[0] && progress <= CAPTION_RANGE[1];
+      caption.classList.toggle('visible', visible);
+    }
   }
 
   let pending = false;
@@ -267,10 +226,9 @@ document.querySelectorAll('.h-card img').forEach(img => {
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('resize', updateFromScroll);
 
-  resizeCanvas();
-  preloadImages();
+  updateFromScroll();
 })();
 
 // ── Back to top ──────────────────────────────────────────

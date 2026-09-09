@@ -419,17 +419,25 @@
     </div>
   </section>
 
-  <!-- ── Bánh mì éclaté (scroll, frames pré-rendues) ──── -->
+  <!-- ── Bánh mì éclaté (scroll-scrub sur vidéo) ──────── -->
   <section id="banh-reveal">
     <div id="banh-pin">
       <div id="banh-stage">
-        <canvas id="banh-canvas" width="820" height="1087" aria-label="Bánh mì qui se décompose en ingrédients"></canvas>
-        <span class="banh-label right" id="banh-lab-pain-haut">Baguette<br/>croustillante</span>
-        <span class="banh-label left"  id="banh-lab-coriandre">Coriandre<br/>fraîche</span>
-        <span class="banh-label right" id="banh-lab-concombre">Concombre</span>
-        <span class="banh-label left"  id="banh-lab-carottes">Carottes<br/>marinées</span>
-        <span class="banh-label right" id="banh-lab-viande">Bœuf citronelle, Poulet<br/>ou Tofu · 100% Halal</span>
-        <span class="banh-label left"  id="banh-lab-pain-bas">Baguette<br/>artisanale</span>
+        <video
+          id="banh-video"
+          muted playsinline preload="auto"
+          poster="banh-video-poster.jpg"
+          aria-label="Bánh mì qui se décompose en ingrédients"
+        >
+          <source src="banh-video.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div id="banh-caption">
+        <span>Baguette artisanale</span><i></i>
+        <span>Coriandre fraîche</span><i></i>
+        <span>Concombre</span><i></i>
+        <span>Carottes marinées</span><i></i>
+        <span>Bœuf, Poulet ou Tofu · 100% Halal</span>
       </div>
     </div>
   </section>
