@@ -821,8 +821,8 @@ footer{
 
   .bxc-pin{
     width:100%;
-    height:auto !important;
-    aspect-ratio:16/9;
+    height:75vh !important;
+    height:75svh !important;
     min-height:0 !important;
     max-height:none !important;
     overflow:hidden;
@@ -865,8 +865,8 @@ footer{
 
   /* Bánh mì éclaté : même logique, plein cadre sans crop */
   .bxc-pin{
-    height:auto !important;
-    aspect-ratio:16/9;
+    height:70vh !important;
+    height:70svh !important;
     min-height:0 !important;
     max-height:none !important;
   }

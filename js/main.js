@@ -95,15 +95,19 @@ gsap.to('#hero-img', {
   const canvas = document.getElementById('bxc-canvas');
   if (pin && canvas) {
     const ctx = canvas.getContext('2d');
-    const FRAME_COUNT = 223;
+    // Le clip source mélange un plan horizontal (fermé) et un plan vertical
+    // (tour éclatée). Seul 172→197 est le vrai mouvement d'ouverture/fermeture
+    // de la tour, filmé en vertical : on l'utilise à l'envers (197→172) pour
+    // que scroll bas = ouverture, scroll haut = fermeture.
+    const FRAME_START = 172;
+    const FRAME_END = 197;
+    const FRAME_TOTAL = FRAME_END - FRAME_START + 1;
     const frameSrc = i => `banh-frames-v2/frame_${String(i).padStart(4,'0')}.jpg`;
-    const images = new Array(FRAME_COUNT + 1);
-    let loadedCount = 0;
-    let lastDrawn = 1;
+    const images = {};
+    let lastDrawn = FRAME_END;
 
-    for (let i = 1; i <= FRAME_COUNT; i++) {
+    for (let i = FRAME_START; i <= FRAME_END; i++) {
       const img = new Image();
-      img.onload = () => { loadedCount++; };
       img.src = frameSrc(i);
       images[i] = img;
     }
@@ -118,12 +122,13 @@ gsap.to('#hero-img', {
     };
 
     const drawFrame = n => {
-      n = Math.min(FRAME_COUNT, Math.max(1, n));
+      n = Math.min(FRAME_END, Math.max(FRAME_START, n));
       let img = images[n];
-      while ((!img || !img.complete || !img.naturalWidth) && n > 1) { n--; img = images[n]; }
+      while ((!img || !img.complete || !img.naturalWidth) && n > FRAME_START) { n--; img = images[n]; }
       if (!img || !img.naturalWidth || !cw || !ch) return;
       lastDrawn = n;
-      const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      // contain-fit (jamais de crop, même si l'image est verticale et le cadre large)
+      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
       const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
       ctx.clearRect(0, 0, cw, ch);
@@ -146,12 +151,13 @@ gsap.to('#hero-img', {
     ScrollTrigger.create({
       trigger: '#bxc-pin',
       start: 'top top',
-      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 1.15 : 2.2)),
+      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 1.4 : 2.2)),
       pin: true,
       pinSpacing: true,
       scrub: .4,
       onUpdate: self => {
-        drawFrame(1 + Math.round(self.progress * (FRAME_COUNT - 1)));
+        const n = Math.round(FRAME_END - self.progress * (FRAME_TOTAL - 1));
+        drawFrame(n);
         setBand(self.progress);
       },
       onRefresh: () => resize()
