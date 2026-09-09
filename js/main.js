@@ -97,9 +97,10 @@ gsap.to('#hero-img', {
         trigger: '#banh-explode', start: 'top 75%', end: 'bottom 45%', scrub: .6
       }
     });
-    tl.to('#banh-visual .bx-open', { opacity:1, scale:1, duration:1, ease:'none' }, 0)
-      .to('#banh-visual .bx-closed', { opacity:0, duration:1, ease:'none' }, 0)
-      .to('#banh-visual .mv-row', { opacity:1, stagger:.12, duration:.6, ease:'none' }, .15);
+    tl.set('#banh-visual .bx-open', { opacity:0 }, 0)
+      .to('#banh-visual .bx-open', { opacity:1, scale:1, duration:.18, ease:'none' }, .38)
+      .to('#banh-visual .bx-closed', { opacity:0, duration:.18, ease:'none' }, .38)
+      .to('#banh-visual .mv-row', { opacity:1, stagger:.1, duration:.4, ease:'none' }, .55);
   }
 }
 
