@@ -92,15 +92,23 @@ gsap.to('#hero-img', {
 {
   const vis = document.getElementById('banh-visual');
   if (vis) {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#banh-explode', start: 'top 75%', end: 'bottom 45%', scrub: .6
-      }
+    const bxOpen = vis.querySelector('.bx-open');
+    const bxClosed = vis.querySelector('.bx-closed');
+    const rows = vis.querySelectorAll('.mv-row');
+    let isOpen = null;
+    const setState = open => {
+      if (open === isOpen) return;
+      isOpen = open;
+      gsap.set(bxOpen, { opacity: open ? 1 : 0, scale: 1 });
+      gsap.set(bxClosed, { opacity: open ? 0 : 1 });
+      gsap.to(rows, { opacity: open ? 1 : 0, stagger: open ? .08 : 0, duration: .35, ease:'power1.out' });
+    };
+    ScrollTrigger.create({
+      trigger: '#banh-explode', start: 'top 70%', end: 'bottom 50%', scrub: true,
+      onUpdate: self => setState(self.progress > .5),
+      onEnter: self => setState(self.progress > .5),
+      onLeaveBack: () => setState(false)
     });
-    tl.set('#banh-visual .bx-open', { opacity:0 }, 0)
-      .to('#banh-visual .bx-open', { opacity:1, scale:1, duration:.18, ease:'none' }, .38)
-      .to('#banh-visual .bx-closed', { opacity:0, duration:.18, ease:'none' }, .38)
-      .to('#banh-visual .mv-row', { opacity:1, stagger:.1, duration:.4, ease:'none' }, .55);
   }
 }
 
