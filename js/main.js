@@ -151,10 +151,10 @@ gsap.to('#hero-img', {
     ScrollTrigger.create({
       trigger: '#bxc-pin',
       start: 'top top',
-      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 1.4 : 2.2)),
+      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 0.7 : 2.2)),
       pin: true,
       pinSpacing: true,
-      scrub: .4,
+      scrub: window.innerWidth <= 768 ? .15 : .4,
       onUpdate: self => {
         const n = Math.round(FRAME_END - self.progress * (FRAME_TOTAL - 1));
         drawFrame(n);
