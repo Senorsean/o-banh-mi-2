@@ -91,23 +91,31 @@ gsap.to('#hero-img', {
 // ── Bánh mì éclaté scrub (ferme en haut, s'ouvre en bas) ─────
 {
   const vis = document.getElementById('banh-visual');
-  if (vis) {
-    const bxOpen = vis.querySelector('.bx-open');
-    const bxClosed = vis.querySelector('.bx-closed');
+  const vid = document.getElementById('bxv-video');
+  if (vis && vid) {
     const rows = vis.querySelectorAll('.mv-row');
+    let ready = false;
+    let pendingProgress = 0;
+    vid.addEventListener('loadedmetadata', () => {
+      ready = true;
+      try { vid.currentTime = pendingProgress * vid.duration; } catch(e){}
+    });
     let isOpen = null;
-    const setState = open => {
+    const setRows = open => {
       if (open === isOpen) return;
       isOpen = open;
-      gsap.set(bxOpen, { opacity: open ? 1 : 0, scale: 1 });
-      gsap.set(bxClosed, { opacity: open ? 0 : 1 });
       gsap.to(rows, { opacity: open ? 1 : 0, stagger: open ? .08 : 0, duration: .35, ease:'power1.out' });
     };
     ScrollTrigger.create({
-      trigger: '#banh-explode', start: 'top 70%', end: 'bottom 50%', scrub: true,
-      onUpdate: self => setState(self.progress > .5),
-      onEnter: self => setState(self.progress > .5),
-      onLeaveBack: () => setState(false)
+      trigger: '#banh-explode', start: 'top 85%', end: 'bottom 20%', scrub: .3,
+      onUpdate: self => {
+        pendingProgress = self.progress;
+        if (ready && vid.duration) {
+          try { vid.currentTime = self.progress * vid.duration; } catch(e){}
+        }
+        setRows(self.progress > .55);
+      },
+      onLeaveBack: () => setRows(false)
     });
   }
 }
