@@ -419,25 +419,23 @@
     </div>
   </section>
 
-  <!-- ── Bánh mì éclaté (scroll-scrub sur vidéo) ──────── -->
-  <section id="banh-reveal">
-    <div id="banh-pin">
-      <div id="banh-stage">
-        <video
-          id="banh-video"
-          muted playsinline preload="auto"
-          poster="banh-video-poster.jpg"
-          aria-label="Bánh mì qui se décompose en ingrédients"
-        >
-          <source src="banh-video.mp4" type="video/mp4" />
-        </video>
+  <!-- ── Bánh mì éclaté (visuel statique + légendes) ──── -->
+  <section id="banh-explode" class="s">
+    <div class="banh-explode-grid">
+      <div class="banh-explode-text">
+        <div class="eyebrow slide-up">Composition</div>
+        <h2 class="display slide-up">Ce qu'il y a<br/>dans votre <em>bánh mì</em></h2>
+        <p class="slide-up">Une baguette artisanale, des légumes marinés maison, une viande 100% Halal grillée minute et une fraîcheur d'herbes qui ne triche pas. Chaque couche est pensée pour l'équilibre exact entre croustillant, acidulé et fondant.</p>
+        <a href="#menu" class="btn-primary slide-up">Voir le menu</a>
       </div>
-      <div id="banh-caption">
-        <span>Baguette artisanale</span><i></i>
-        <span>Coriandre fraîche</span><i></i>
-        <span>Concombre</span><i></i>
-        <span>Carottes marinées</span><i></i>
-        <span>Bœuf, Poulet ou Tofu · 100% Halal</span>
+      <div class="banh-explode-visual slide-up">
+        <img src="banh-static.jpg" alt="Bánh mì décomposé : baguette, coriandre, concombre, carottes marinées, viande, baguette" loading="lazy" />
+        <div class="mv-row" style="top:13%"><span class="mv-line"></span><span class="mv-text">Baguette<br/>croustillante</span></div>
+        <div class="mv-row" style="top:28%"><span class="mv-line"></span><span class="mv-text">Coriandre<br/>fraîche</span></div>
+        <div class="mv-row" style="top:39%"><span class="mv-line"></span><span class="mv-text">Concombre</span></div>
+        <div class="mv-row" style="top:54%"><span class="mv-line"></span><span class="mv-text">Carottes<br/>marinées</span></div>
+        <div class="mv-row" style="top:72%"><span class="mv-line"></span><span class="mv-text">Bœuf citronelle, Poulet<br/>ou Tofu · 100% Halal</span></div>
+        <div class="mv-row" style="top:89%"><span class="mv-line"></span><span class="mv-text">Baguette<br/>artisanale</span></div>
       </div>
     </div>
   </section>

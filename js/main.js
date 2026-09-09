@@ -179,57 +179,6 @@ document.querySelectorAll('.h-card img').forEach(img => {
   });
 });
 
-// ── Bánh mì éclaté (scroll-scrub sur vidéo) ──────────────────
-(function initBanhVideo() {
-  const video   = document.getElementById('banh-video');
-  const caption = document.getElementById('banh-caption');
-  const track   = document.getElementById('banh-reveal');
-  if (!video || !track) return;
-
-  let duration = 0, ready = false, lastTime = -1;
-  const CAPTION_RANGE = [.32, .68]; // fenêtre ou tous les ingredients sont visibles dans la video
-
-  video.addEventListener('loadedmetadata', () => {
-    duration = video.duration || 0;
-    ready = duration > 0;
-    updateFromScroll();
-  });
-  video.load();
-  video.pause();
-
-  function updateFromScroll() {
-    const rect = track.getBoundingClientRect();
-    const scrollableDistance = track.offsetHeight - window.innerHeight;
-    let progress = -rect.top / scrollableDistance;
-    progress = Math.min(Math.max(progress, 0), 1);
-
-    if (ready) {
-      const t = progress * duration;
-      if (Math.abs(t - lastTime) > .03) {
-        lastTime = t;
-        video.currentTime = t;
-      }
-    }
-
-    if (caption) {
-      const visible = progress >= CAPTION_RANGE[0] && progress <= CAPTION_RANGE[1];
-      caption.classList.toggle('visible', visible);
-    }
-  }
-
-  let pending = false;
-  function onScroll() {
-    if (!pending) {
-      pending = true;
-      requestAnimationFrame(() => { updateFromScroll(); pending = false; });
-    }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', updateFromScroll);
-
-  updateFromScroll();
-})();
 
 // ── Back to top ──────────────────────────────────────────
 const backTop = document.getElementById('back-top');
