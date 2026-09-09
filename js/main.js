@@ -19,6 +19,7 @@ document.querySelectorAll('a,button,.tab-btn,.m-card,.bento-cell').forEach(el=>{
 
 // ── Loader ──────────────────────────────────────────────────
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 const loader = document.getElementById('loader');
 const llogo  = document.getElementById('l-logo');
 
@@ -145,10 +146,9 @@ gsap.to('#hero-img', {
     ScrollTrigger.create({
       trigger: '#bxc-pin',
       start: 'top top',
-     end: () => '+=' + Math.round(
-  window.innerHeight * (window.innerWidth <= 768 ? 1.1 : 2.6)
-),
+      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 1.6 : 2.2)),
       pin: true,
+      pinSpacing: true,
       scrub: .4,
       onUpdate: self => {
         drawFrame(1 + Math.round(self.progress * (FRAME_COUNT - 1)));
