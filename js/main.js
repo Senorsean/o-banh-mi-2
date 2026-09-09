@@ -146,7 +146,7 @@ gsap.to('#hero-img', {
     ScrollTrigger.create({
       trigger: '#bxc-pin',
       start: 'top top',
-      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 1.6 : 2.2)),
+      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 1.15 : 2.2)),
       pin: true,
       pinSpacing: true,
       scrub: .4,
