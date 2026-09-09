@@ -88,34 +88,71 @@ gsap.to('#hero-img', {
   scrollTrigger: { trigger:'#hero', start:'top top', end:'bottom top', scrub:true }
 });
 
-// ── Bánh mì éclaté scrub (ferme en haut, s'ouvre en bas) ─────
+// ── Bánh mì éclaté : canvas scroll-scrub plein écran ──────────
 {
-  const vis = document.getElementById('banh-visual');
-  const vid = document.getElementById('bxv-video');
-  if (vis && vid) {
-    const rows = vis.querySelectorAll('.mv-row');
-    let ready = false;
-    let pendingProgress = 0;
-    vid.addEventListener('loadedmetadata', () => {
-      ready = true;
-      try { vid.currentTime = pendingProgress * vid.duration; } catch(e){}
-    });
-    let isOpen = null;
-    const setRows = open => {
-      if (open === isOpen) return;
-      isOpen = open;
-      gsap.to(rows, { opacity: open ? 1 : 0, stagger: open ? .08 : 0, duration: .35, ease:'power1.out' });
+  const pin = document.getElementById('bxc-pin');
+  const canvas = document.getElementById('bxc-canvas');
+  if (pin && canvas) {
+    const ctx = canvas.getContext('2d');
+    const FRAME_COUNT = 223;
+    const frameSrc = i => `banh-frames-v2/frame_${String(i).padStart(4,'0')}.jpg`;
+    const images = new Array(FRAME_COUNT + 1);
+    let loadedCount = 0;
+    let lastDrawn = 1;
+
+    for (let i = 1; i <= FRAME_COUNT; i++) {
+      const img = new Image();
+      img.onload = () => { loadedCount++; };
+      img.src = frameSrc(i);
+      images[i] = img;
+    }
+
+    let cw = 0, ch = 0, dpr = 1;
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = pin.clientWidth; ch = pin.clientHeight;
+      canvas.width = cw * dpr; canvas.height = ch * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawFrame(lastDrawn);
     };
+
+    const drawFrame = n => {
+      n = Math.min(FRAME_COUNT, Math.max(1, n));
+      let img = images[n];
+      while ((!img || !img.complete || !img.naturalWidth) && n > 1) { n--; img = images[n]; }
+      if (!img || !img.naturalWidth || !cw || !ch) return;
+      lastDrawn = n;
+      const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+      const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.drawImage(img, dx, dy, dw, dh);
+    };
+
+    const capItems = document.querySelectorAll('#bxc-caption .bxc-cap-item');
+    let activeBand = -1;
+    const setBand = progress => {
+      const band = Math.min(capItems.length - 1, Math.floor(progress * capItems.length));
+      if (band === activeBand) return;
+      activeBand = band;
+      capItems.forEach((el, i) => el.classList.toggle('active', i === band));
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+    setBand(0);
+
     ScrollTrigger.create({
-      trigger: '#banh-explode', start: 'top 85%', end: 'bottom 20%', scrub: .3,
+      trigger: '#bxc-pin',
+      start: 'top top',
+      end: () => '+=' + Math.round(window.innerHeight * 2.6),
+      pin: true,
+      scrub: .4,
       onUpdate: self => {
-        pendingProgress = self.progress;
-        if (ready && vid.duration) {
-          try { vid.currentTime = self.progress * vid.duration; } catch(e){}
-        }
-        setRows(self.progress > .55);
+        drawFrame(1 + Math.round(self.progress * (FRAME_COUNT - 1)));
+        setBand(self.progress);
       },
-      onLeaveBack: () => setRows(false)
+      onRefresh: () => resize()
     });
   }
 }

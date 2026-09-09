@@ -419,27 +419,23 @@
     </div>
   </section>
 
-  <!-- ── Bánh mì éclaté (visuel statique + légendes) ──── -->
-  <section id="banh-explode" class="s">
-    <div class="banh-explode-grid">
-      <div class="banh-explode-text">
-        <div class="eyebrow slide-up">Composition</div>
-        <h2 class="display slide-up">Ce qu'il y a<br/>dans votre <em>bánh mì</em></h2>
-        <p class="slide-up">Une baguette artisanale, des légumes marinés maison, une viande 100% Halal grillée minute et une fraîcheur d'herbes qui ne triche pas. Chaque couche est pensée pour l'équilibre exact entre croustillant, acidulé et fondant.</p>
-        <a href="#menu" class="btn-primary slide-up">Voir le menu</a>
-      </div>
-      <div class="banh-explode-visual slide-up" id="banh-visual">
-        <div class="bxv-stage" id="bxv-stage">
-          <video id="bxv-video" muted playsinline preload="auto" poster="banh-video-poster.jpg">
-            <source src="banh-video.mp4" type="video/mp4" />
-          </video>
-        </div>
-        <div class="mv-row" style="top:13%"><span class="mv-line"></span><span class="mv-text">Baguette<br/>croustillante</span></div>
-        <div class="mv-row" style="top:28%"><span class="mv-line"></span><span class="mv-text">Coriandre<br/>fraîche</span></div>
-        <div class="mv-row" style="top:39%"><span class="mv-line"></span><span class="mv-text">Concombre</span></div>
-        <div class="mv-row" style="top:54%"><span class="mv-line"></span><span class="mv-text">Carottes<br/>marinées</span></div>
-        <div class="mv-row" style="top:72%"><span class="mv-line"></span><span class="mv-text">Bœuf citronelle, Poulet<br/>ou Tofu · 100% Halal</span></div>
-        <div class="mv-row" style="top:89%"><span class="mv-line"></span><span class="mv-text">Baguette<br/>artisanale</span></div>
+  <!-- ── Bánh mì éclaté (canvas scroll-scrub plein écran) ──── -->
+  <section id="banh-explode">
+    <div class="bxc-intro s">
+      <div class="eyebrow slide-up">Composition</div>
+      <h2 class="display slide-up">Ce qu'il y a<br/>dans votre <em>bánh mì</em></h2>
+      <p class="slide-up">Une baguette artisanale, des légumes marinés maison, une viande 100% Halal grillée minute et une fraîcheur d'herbes qui ne triche pas. Chaque couche est pensée pour l'équilibre exact entre croustillant, acidulé et fondant.</p>
+      <a href="#menu" class="btn-primary slide-up">Voir le menu</a>
+    </div>
+    <div class="bxc-pin" id="bxc-pin">
+      <canvas id="bxc-canvas"></canvas>
+      <div class="bxc-caption" id="bxc-caption">
+        <div class="bxc-cap-item" data-band="0">Baguette croustillante</div>
+        <div class="bxc-cap-item" data-band="1">Coriandre fraîche</div>
+        <div class="bxc-cap-item" data-band="2">Concombre</div>
+        <div class="bxc-cap-item" data-band="3">Carottes marinées</div>
+        <div class="bxc-cap-item" data-band="4">Bœuf citronelle, Poulet ou Tofu · 100% Halal</div>
+        <div class="bxc-cap-item" data-band="5">Baguette artisanale</div>
       </div>
     </div>
   </section>
