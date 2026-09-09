@@ -88,6 +88,21 @@ gsap.to('#hero-img', {
   scrollTrigger: { trigger:'#hero', start:'top top', end:'bottom top', scrub:true }
 });
 
+// ── Bánh mì éclaté scrub (ferme en haut, s'ouvre en bas) ─────
+{
+  const vis = document.getElementById('banh-visual');
+  if (vis) {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#banh-explode', start: 'top 75%', end: 'bottom 45%', scrub: .6
+      }
+    });
+    tl.to('#banh-visual .bx-open', { opacity:1, scale:1, duration:1, ease:'none' }, 0)
+      .to('#banh-visual .bx-closed', { opacity:0, duration:1, ease:'none' }, 0)
+      .to('#banh-visual .mv-row', { opacity:1, stagger:.12, duration:.6, ease:'none' }, .15);
+  }
+}
+
 // ── Bento stagger ───────────────────────────────────────────
 gsap.fromTo('.bento-cell',
   { opacity:0, y:32 },
