@@ -652,6 +652,7 @@ footer{
   color:var(--text);
   font-weight:600;
 }
+.bxc-break{display:none}
 
 @media(max-width:900px){
   .bxc-caption{left:6%;bottom:7%;top:auto;transform:none;max-width:78%}
@@ -855,6 +856,8 @@ footer{
     font-size:.72rem !important;
     padding:3px 0 !important;
   }
+
+  .bxc-break{display:block}
 }
 
 
@@ -895,5 +898,7 @@ footer{
     font-size:.68rem !important;
     padding:2px 0 !important;
   }
+
+  .bxc-break{display:block}
 }
 .pin-spacer{background:var(--surface) !important;}
