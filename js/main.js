@@ -125,14 +125,15 @@ gsap.to('#hero-img', {
       // contain-fit (jamais de crop) : ancré à droite sur PC (à côté du texte),
       // centré en haut sur mobile (place réservée en bas pour les légendes empilées)
       const isMobile = window.innerWidth <= 768;
-      const boxW = cw * (isMobile ? 0.82 : 0.56);
-      const boxH = ch * (isMobile ? 0.9 : 0.8);
+      const boxW = cw * (isMobile ? 0.78 : 0.56);
+      const boxH = ch * (isMobile ? 0.62 : 0.8);
       const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
       let dx, dy;
       if (isMobile) {
-        dx = (cw - dw) / 2;
-        dy = ch * 0.03;
+        const rightPad = cw * 0.04;
+        dx = cw - dw - rightPad;
+        dy = ch * 0.10;
       } else {
         const rightPad = cw * 0.06;
         dx = cw - dw - rightPad;
