@@ -99,12 +99,12 @@ gsap.to('#hero-img', {
     // (tour éclatée). Seul 172→197 est le vrai mouvement d'ouverture/fermeture
     // de la tour, filmé en vertical : on l'utilise à l'envers (197→172) pour
     // que scroll bas = ouverture, scroll haut = fermeture.
-    const FRAME_START = 172;
-    const FRAME_END = 197;
+    const FRAME_START = 70;
+    const FRAME_END = 200;
     const FRAME_TOTAL = FRAME_END - FRAME_START + 1;
     const frameSrc = i => `banh-frames-v2/frame_${String(i).padStart(4,'0')}.jpg`;
     const images = {};
-    let lastDrawn = FRAME_END;
+    let lastDrawn = FRAME_START;
 
     for (let i = FRAME_START; i <= FRAME_END; i++) {
       const img = new Image();
@@ -156,7 +156,7 @@ gsap.to('#hero-img', {
       pinSpacing: true,
       scrub: window.innerWidth <= 768 ? .15 : .4,
       onUpdate: self => {
-        const n = Math.round(FRAME_END - self.progress * (FRAME_TOTAL - 1));
+        const n = Math.round(FRAME_START + self.progress * (FRAME_TOTAL - 1));
         drawFrame(n);
         setBand(self.progress);
       },
