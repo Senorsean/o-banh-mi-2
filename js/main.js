@@ -88,6 +88,78 @@ gsap.to('#hero-img', {
   yPercent:20, ease:'none',
   scrollTrigger: { trigger:'#hero', start:'top top', end:'bottom top', scrub:true }
 });
+// ── Bánh mì éclaté : canvas scroll-scrub plein écran ──────────
+{
+  const pin = document.getElementById('bxc-pin');
+  const canvas = document.getElementById('bxc-canvas');
+  if (pin && canvas) {
+    const ctx = canvas.getContext('2d');
+    const FRAME_START = 68;
+    const FRAME_END = 202;
+    const FRAME_TOTAL = FRAME_END - FRAME_START + 1;
+    const frameSrc = i => `banh-frames-v3/frame_${String(i).padStart(4,'0')}.jpg`;
+    const images = {};
+    let lastDrawn = FRAME_START;
+
+    for (let i = FRAME_START; i <= FRAME_END; i++) {
+      const img = new Image();
+      img.src = frameSrc(i);
+      images[i] = img;
+    }
+
+    let cw = 0, ch = 0, dpr = 1;
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = pin.clientWidth; ch = pin.clientHeight;
+      canvas.width = cw * dpr; canvas.height = ch * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawFrame(lastDrawn);
+    };
+
+    const drawFrame = n => {
+      n = Math.min(FRAME_END, Math.max(FRAME_START, n));
+      let img = images[n];
+      while ((!img || !img.complete || !img.naturalWidth) && n > FRAME_START) { n--; img = images[n]; }
+      if (!img || !img.naturalWidth || !cw || !ch) return;
+      lastDrawn = n;
+      // contain-fit (jamais de crop, même si l'image est verticale et le cadre large)
+      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+      const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+      const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+      ctx.clearRect(0, 0, cw, ch);
+      ctx.drawImage(img, dx, dy, dw, dh);
+    };
+
+    const capItems = document.querySelectorAll('#bxc-caption .bxc-cap-item');
+    let activeBand = -1;
+    const setBand = progress => {
+      const band = Math.min(capItems.length - 1, Math.floor(progress * capItems.length));
+      if (band === activeBand) return;
+      activeBand = band;
+      capItems.forEach((el, i) => el.classList.toggle('active', i === band));
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+    setBand(0);
+
+    ScrollTrigger.create({
+      trigger: '#bxc-pin',
+      start: 'top top',
+      end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 0.7 : 2.2)),
+      pin: true,
+      pinSpacing: true,
+      scrub: window.innerWidth <= 768 ? .15 : .4,
+      onUpdate: self => {
+        const n = Math.round(FRAME_START + self.progress * (FRAME_TOTAL - 1));
+        drawFrame(n);
+        setBand(self.progress);
+      },
+      onRefresh: () => resize()
+    });
+  }
+}
+
 // ── Bento stagger ───────────────────────────────────────────
 gsap.fromTo('.bento-cell',
   { opacity:0, y:32 },
