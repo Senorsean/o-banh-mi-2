@@ -635,16 +635,16 @@ footer{
 .bxc-caption{
   position:absolute;
   left:7%;top:50%;transform:translateY(-50%);
-  max-width:300px;
+  max-width:420px;
   pointer-events:none;
 }
 .bxc-cap-item{
-  font-family:'Inter',sans-serif;
-  font-size:.85rem;font-weight:500;
-  letter-spacing:.02em;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;font-weight:500;
+  letter-spacing:.01em;
   color:var(--muted);
   opacity:.35;
-  padding:6px 0;
+  padding:10px 0;
   transition:opacity .3s ease,color .3s ease;
 }
 .bxc-cap-item.active{
