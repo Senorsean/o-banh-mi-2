@@ -122,10 +122,13 @@ gsap.to('#hero-img', {
       while ((!img || !img.complete || !img.naturalWidth) && n > FRAME_START) { n--; img = images[n]; }
       if (!img || !img.naturalWidth || !cw || !ch) return;
       lastDrawn = n;
-      // contain-fit (jamais de crop, même si l'image est verticale et le cadre large)
-      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+      // contain-fit dans une boîte réduite, ancrée à droite (jamais de crop)
+      const boxW = cw * (window.innerWidth <= 768 ? 0.86 : 0.56);
+      const boxH = ch * 0.8;
+      const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
-      const dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+      const rightPad = cw * (window.innerWidth <= 768 ? 0.07 : 0.06);
+      const dx = cw - dw - rightPad, dy = (ch - dh) / 2;
       ctx.clearRect(0, 0, cw, ch);
       ctx.drawImage(img, dx, dy, dw, dh);
     };

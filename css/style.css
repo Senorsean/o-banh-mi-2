@@ -634,8 +634,8 @@ footer{
 }
 .bxc-caption{
   position:absolute;
-  left:7%;bottom:9%;
-  max-width:340px;
+  left:7%;top:50%;transform:translateY(-50%);
+  max-width:300px;
   pointer-events:none;
 }
 .bxc-cap-item{
