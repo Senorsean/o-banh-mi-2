@@ -126,14 +126,14 @@ gsap.to('#hero-img', {
       // centré en haut sur mobile (place réservée en bas pour les légendes empilées)
       const isMobile = window.innerWidth <= 768;
       const boxW = cw * (isMobile ? 0.78 : 0.56);
-      const boxH = ch * (isMobile ? 0.62 : 0.8);
+      const boxH = ch * (isMobile ? 0.72 : 0.8);
       const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
       let dx, dy;
       if (isMobile) {
         const rightPad = cw * 0.04;
         dx = cw - dw - rightPad;
-        dy = ch * 0.10;
+        dy = ch * 0.04;
       } else {
         const rightPad = cw * 0.06;
         dx = cw - dw - rightPad;
@@ -156,9 +156,14 @@ gsap.to('#hero-img', {
     resize();
     setBand(0);
 
+    const navOffset = () => {
+      const navEl = document.querySelector('nav');
+      return navEl ? Math.round(navEl.getBoundingClientRect().height) : 0;
+    };
+
     ScrollTrigger.create({
       trigger: '#bxc-pin',
-      start: 'top top',
+      start: () => 'top ' + navOffset() + 'px',
       end: () => '+=' + Math.round(pin.getBoundingClientRect().height * (window.innerWidth <= 768 ? 0.7 : 2.2)),
       pin: true,
       pinSpacing: true,
