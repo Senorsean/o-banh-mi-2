@@ -654,12 +654,12 @@ footer{
 }
 
 @media(max-width:900px){
-  .bxc-caption{left:6%;bottom:7%;max-width:78%}
+  .bxc-caption{left:6%;bottom:7%;top:auto;transform:none;max-width:78%}
   .bxc-cap-item{font-size:.75rem}
 }
 
 @media(max-width:560px){
-  .bxc-caption{left:5%;bottom:6%;max-width:82%}
+  .bxc-caption{left:5%;bottom:6%;top:auto;transform:none;max-width:82%}
   .bxc-cap-item{font-size:.68rem}
 }
 
@@ -837,6 +837,8 @@ footer{
     left:20px !important;
     right:20px !important;
     bottom:20px !important;
+    top:auto !important;
+    transform:none !important;
     max-width:none !important;
   }
 
@@ -875,6 +877,8 @@ footer{
     left:16px !important;
     right:16px !important;
     bottom:16px !important;
+    top:auto !important;
+    transform:none !important;
     max-width:none !important;
   }
 
