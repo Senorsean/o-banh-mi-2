@@ -131,7 +131,7 @@ gsap.to('#hero-img', {
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
       let dx, dy;
       if (isMobile) {
-        const rightPad = cw * 0.04;
+        const rightPad = cw * 0.01;
         dx = cw - dw - rightPad;
         dy = ch * 0.04;
       } else {
