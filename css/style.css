@@ -772,6 +772,8 @@ footer{
     position:fixed;
     inset:0;
     top:0;
+    left:0;
+    transform:none;
     background:rgba(248,243,231,.97);
     backdrop-filter:blur(20px);
     -webkit-backdrop-filter:blur(20px);
@@ -783,6 +785,7 @@ footer{
   nav.open .nav-links a{
     font-size:1.4rem;
     letter-spacing:.04em;
+    color:var(--text);
   }
 
 
