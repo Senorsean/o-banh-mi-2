@@ -127,8 +127,8 @@ gsap.to('#hero-img', {
       const w = window.innerWidth;
       const isMobile = w <= 768;
       const isTablet = !isMobile && w <= 1024;
-      const boxW = cw * (isMobile ? 0.78 : isTablet ? 0.85 : 0.56);
-      const boxH = ch * (isMobile ? 0.72 : isTablet ? 0.94 : 0.8);
+      const boxW = cw * (isMobile ? 0.78 : isTablet ? 0.98 : 0.56);
+      const boxH = ch * (isMobile ? 0.72 : isTablet ? 0.98 : 0.8);
       const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
       let dx, dy;
@@ -137,7 +137,7 @@ gsap.to('#hero-img', {
         dx = cw - dw - rightPad;
         dy = ch * 0.04;
       } else if (isTablet) {
-        const rightPad = cw * 0.02;
+        const rightPad = cw * 0.005;
         dx = cw - dw - rightPad;
         dy = (ch - dh) / 2;
       } else {

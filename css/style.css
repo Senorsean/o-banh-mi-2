@@ -737,6 +737,16 @@ footer{
     min-height:0 !important;
     max-height:none !important;
   }
+
+  /* légendes centrées face au sandwich (pas collées en bas comme sur mobile) */
+  .bxc-caption{
+    left:6% !important;
+    top:50% !important;
+    bottom:auto !important;
+    transform:translateY(-50%) !important;
+    max-width:360px !important;
+  }
+  .bxc-cap-item{font-size:1.1rem !important}
 }
 
 
