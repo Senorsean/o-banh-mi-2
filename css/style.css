@@ -729,6 +729,14 @@ footer{
     grid-template-columns:1fr;
     gap:36px;
   }
+
+  /* Bánh mì éclaté : pin plein-écran trop haut sur iPad, vide énorme sous "Voir le menu" */
+  .bxc-pin{
+    height:55vh !important;
+    height:55svh !important;
+    min-height:0 !important;
+    max-height:none !important;
+  }
 }
 
 
