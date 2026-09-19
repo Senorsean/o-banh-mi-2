@@ -60,9 +60,15 @@ const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 60));
 
 // ── Hamburger ───────────────────────────────────────────────
-document.getElementById('ham').addEventListener('click', () => nav.classList.toggle('open'));
+document.getElementById('ham').addEventListener('click', () => {
+  nav.classList.toggle('open');
+  document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+});
 document.querySelectorAll('#nav-links a').forEach(a =>
-  a.addEventListener('click', () => nav.classList.remove('open'))
+  a.addEventListener('click', () => {
+    nav.classList.remove('open');
+    document.body.style.overflow = '';
+  })
 );
 
 // ── Scroll reveals ──────────────────────────────────────────
