@@ -127,7 +127,7 @@ gsap.to('#hero-img', {
       const w = window.innerWidth;
       const isMobile = w <= 768;
       const isTablet = !isMobile && w <= 1024;
-      const boxW = cw * (isMobile ? 0.78 : isTablet ? 0.98 : 0.56);
+      const boxW = cw * (isMobile ? 0.78 : isTablet ? 0.72 : 0.56);
       const boxH = ch * (isMobile ? 0.72 : isTablet ? 0.98 : 0.8);
       const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
