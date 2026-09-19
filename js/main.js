@@ -137,8 +137,7 @@ gsap.to('#hero-img', {
         dx = cw - dw - rightPad;
         dy = ch * 0.04;
       } else if (isTablet) {
-        const rightPad = cw * 0.005;
-        dx = cw - dw - rightPad;
+        dx = cw - dw;
         dy = (ch - dh) / 2;
       } else {
         const rightPad = cw * 0.06;
