@@ -124,9 +124,11 @@ gsap.to('#hero-img', {
       lastDrawn = n;
       // contain-fit (jamais de crop) : ancré à droite sur PC (à côté du texte),
       // centré en haut sur mobile (place réservée en bas pour les légendes empilées)
-      const isMobile = window.innerWidth <= 768;
-      const boxW = cw * (isMobile ? 0.78 : 0.56);
-      const boxH = ch * (isMobile ? 0.72 : 0.8);
+      const w = window.innerWidth;
+      const isMobile = w <= 768;
+      const isTablet = !isMobile && w <= 1024;
+      const boxW = cw * (isMobile ? 0.78 : isTablet ? 0.85 : 0.56);
+      const boxH = ch * (isMobile ? 0.72 : isTablet ? 0.94 : 0.8);
       const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
       const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
       let dx, dy;
@@ -134,6 +136,10 @@ gsap.to('#hero-img', {
         const rightPad = cw * 0.01;
         dx = cw - dw - rightPad;
         dy = ch * 0.04;
+      } else if (isTablet) {
+        const rightPad = cw * 0.02;
+        dx = cw - dw - rightPad;
+        dy = (ch - dh) / 2;
       } else {
         const rightPad = cw * 0.06;
         dx = cw - dw - rightPad;
